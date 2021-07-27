@@ -1,0 +1,20 @@
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.utils.dates import days_ago
+
+default_args = {
+    'schedule_interval': '#SCHEDULE_INTERVAL',
+    'start_date': days_ago(2),
+    'catchup': False,
+    'owner': 'admin',
+}
+
+dag = DAG(
+    '#DAG_ID',
+    default_args = default_args
+)
+
+def process_task_1(**context):
+    print('Simple hello world')
+
+t1 = PythonOperator(task_id = "#TASK_ID_1", python_callable = process_task_1, dag = dag, provide_context = True)
