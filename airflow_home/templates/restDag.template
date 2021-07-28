@@ -3,7 +3,6 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
 
 default_args = {
-    'schedule_interval': '#SCHEDULE_INTERVAL',
     'start_date': days_ago(2),
     'catchup': False,
     'owner': 'admin',
@@ -11,7 +10,8 @@ default_args = {
 
 dag = DAG(
     '#DAG_ID',
-    default_args = default_args
+    default_args = default_args,
+    schedule_interval='#SCHEDULE_INTERVAL'
 )
 
 def process_task_1(**context):
