@@ -14,28 +14,27 @@ Do you need a wrapper-restful API to schedule a task in airflow? That is, a Flas
 
 Since we require to migrate from mongo to postgresql, we would require both of these dbs up and running. For that I'm using docker by:
 
-'''# docker run -it -v mongodata:/data/db -p 27017:27017 --name mongodb mongo'''
+```# docker run -it -v mongodata:/data/db -p 27017:27017 --name mongodb mongo```
 
-'''# docker run -it --name postgresql -p 5432:5432 bitnami/postgresql:latest'''
+```# docker run -it --name postgresql -p 5432:5432 bitnami/postgresql:latest```
 
 
 if you're using running the container for the second time, you could get by with:
 
-'''# docker start -i mongodb'''
+```# docker start -i mongodb```
 
-'''# docker start -i postgresql'''
-
+```# docker start -i postgresql```
 
 Now you would have both the dbs running in the terminal. if you want, you add -d or remove -i to run these containers in the background. Now let's move on to configuring python and airflow. 
 
 To install all the python dependencies I'm using pipenv. If you don't have it you can get it by:
 
-'''pip install pipenv'''
+```$ pip install pipenv```
 
 
 after that install all the dependencies by running this command in the git directory:
 
-'''pipenv install'''
+```$ pipenv install```
 
 Now you have to change various script variables to match the exact location of airflow directory. script/config that requires this change are:
 - webStart.sh (1 instance)
@@ -45,30 +44,30 @@ Now you have to change various script variables to match the exact location of a
 
 Since git's db file may have some data already on it, let's reset airflow db:
 
-'''bash resetAirflowDb.sh'''
+```$ bash resetAirflowDb.sh```
 
 
 Finally, create an airflow user with username = admin and password = admin:
 
-'''pipenv run airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin'''
+```$ pipenv run airflow users  create --role Admin --username admin --email admin --firstname admin --lastname admin --password admin```
 
 # Running
 
 With your docker dbs up and running, let's start up airflow and the flask API itself. For this you will need to execute these commands in three different terminals:
 
-'''bash webStart.sh'''
+```$ bash webStart.sh```
 
-'''bash schedulerStart.sh'''
+```$ bash schedulerStart.sh```
 
-'''bash flaskStart.sh'''
+```$ bash flaskStart.sh```
 
 
 These bash scripts will take care of all the environment variables, commands, and start the applications.
 
 Now you can send a scheduling request to the flask API and see the solution in action:
 
-'''
-curl --location --request POST 'http://localhost:5000/scheduler' \
+```
+$ curl --location --request POST 'http://localhost:5000/scheduler' \
 --header 'Content-Type: application/json' \
 --d '{
     "schedule_id": "001",
@@ -76,4 +75,4 @@ curl --location --request POST 'http://localhost:5000/scheduler' \
     "chunk_size": 10,
     "frequency": 3600
 }'
-'''
+```
