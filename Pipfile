@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 flask = "*"
 apache-airflow = "*"
+pymongo = "*"
+configparser = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
