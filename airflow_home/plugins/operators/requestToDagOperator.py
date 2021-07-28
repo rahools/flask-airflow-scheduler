@@ -17,18 +17,21 @@ class RequestToDagOperator(TemplateToDagOperator):
         conf = context["dag_run"].conf
 
         namespace = conf['namespace']
-        dag_id = conf["dag_id"]
+        schedule_id = conf["schedule_id"]
         template = conf['template']
+        chunk_size = conf['chunk_size']
+        mongo_query = conf['mongo_query']
 
         Path(os.path.join(self.dynamic_dag_dir, namespace)).mkdir(parents=True, exist_ok=True)
 
         self.template_file_path = os.path.join(self.script_dir, '..', '..','templates', template)
 
-        self.destination_file_path = os.path.join(self.dynamic_dag_dir, namespace, f'{dag_id}.py')
+        self.destination_file_path = os.path.join(self.dynamic_dag_dir, namespace, f'{schedule_id}.py')
 
         self.search_and_replace = {
-            '#SCHEDULE_INTERVAL': conf["schedule_interval"],
-            '#DAG_ID': dag_id,
-            '#TASK_ID_1': 'run-docker'
+            '#schedule_interval': conf["schedule_interval"],
+            '#schedule_id': schedule_id,
+            '#chunk_size': chunk_size,
+            '#mongo_query': mongo_query,
         }
         TemplateToDagOperator.execute(self)
